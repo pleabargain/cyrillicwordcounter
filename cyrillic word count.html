@@ -1,0 +1,64 @@
+<html>
+<head>
+
+<style id="webmakerstyle">
+
+</style>
+For quick testing, load your cyrillic file in the same dir as this file.
+Get a local server running using node.js or a webserver built into Atom text
+editor or similar.
+
+Keep in mind EN and possibly other languages will not work because of the regex command: see below.
+
+
+</head>
+<body>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.min.js"></script>
+<script>
+//global vars
+var txt;
+//empty object
+var counts ={};
+//store the pair of word to its count
+var keys = [];
+//end global vars
+
+
+function preload() {
+    //txt = loadStrings
+    //get your Cyrillic file in the same dir hier
+    txt = loadStrings('test.txt');
+}
+function setup() {
+  let allWords = txt.join("\n");
+  //splt on Cyrillic words
+  // for EN you can use regex:
+  //   split(/\W+/);
+  //unicode and Cyrillic are FUSSY
+  let tokens = allWords.split(/[^\u0400-\u052F\u2DE0-\u2DFF\uA640-\uA69F\u1C80-\u1C8F\u1D2B\u1D78\uFE2E-\uFE2F]+/g);
+  console.log(tokens);
+  for(var i = 0; i < tokens.length; i++){
+    //keep from counting The and the as diff. words
+
+    var word = tokens[i].toLowerCase();
+    //remove digits from the count
+    if (!/\d+/.test(word)){
+    if(counts[word] === undefined){
+      counts[word] =1;
+      keys.push(word);
+    } else{
+      counts[word] = counts[word] +1;
+    }
+    }
+  }//end of for loop
+
+
+
+    noCanvas();
+}
+//# sourceURL=userscript.js
+</script>
+</body>
+</html>
